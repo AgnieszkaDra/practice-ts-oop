@@ -1,6 +1,10 @@
 "use strict";
 class UUID {
-    static generate() {
+    static generate(title, author) {
+        const key = `${title}-${author}`;
+        if (UUID.uuidMap.has(key)) {
+            return UUID.uuidMap.get(key);
+        }
         const generateSegment = () => {
             const characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
             let segment = '';
@@ -11,6 +15,7 @@ class UUID {
             return segment;
         };
         const uuid = `${generateSegment()}-${generateSegment()}-${generateSegment()}-${generateSegment()}`;
+        UUID.uuidMap.set(key, uuid);
         UUID.count++;
         return uuid;
     }
@@ -20,20 +25,23 @@ class UUID {
     }
 }
 UUID.count = 0;
+UUID.uuidMap = new Map();
 class Product {
-    constructor() {
-        this.uuid = UUID.generate();
+    constructor(title, author) {
+        this.uuid = UUID.generate(title, author);
     }
 }
 class Book extends Product {
     constructor(title, author) {
-        super();
+        super(title, author);
         this.title = title;
         this.author = author;
     }
 }
 const book1 = new Book('title2', 'author2');
 const book2 = new Book('title2', 'author2');
+const book3 = new Book('title2', 'author3');
 console.log(book1.uuid);
 console.log(book2.uuid);
+console.log(book3.uuid);
 console.log(UUID.count);
