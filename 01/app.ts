@@ -4,7 +4,7 @@ class User {
 
     constructor(email: string, password: string) {
         this._email = email;
-        hashPassword(password).then((hashedPassword) => {
+        hashPassword(password).then(hashedPassword => {
             this._password = hashedPassword;
         });
     }
@@ -18,12 +18,11 @@ class User {
     }
 
     async check(email: string, password: string): Promise<boolean> {
-        const hashedPassword = await hashPassword(password);
-        console.log("Hash of entered password:", hashedPassword);
-        return this._email === email && this._password === hashedPassword;
+        const hashedPassword = await hashPassword(password); 
+
+        return this._email === email && this._password === hashedPassword; 
     }
 }
-
 
 async function hashPassword(password: string): Promise<string> {
     const encoder = new TextEncoder();
@@ -33,13 +32,13 @@ async function hashPassword(password: string): Promise<string> {
     return hashArray.map(byte => byte.toString(16).padStart(2, '0')).join('');
 }
 
-const user = new User('agnieszka@example.com', 'goodpassword');
 
+(async () => {
+    const user = new User('agnieszka@example.com', 'goodpassword');
 
-user.check('agnieszka@example.com', 'goodpassword').then(result => {
-    console.log(result); 
-});
+    setTimeout(async () => {
+        console.log(await user.check('agnieszka@example.com', 'goodpassword')); 
+        console.log(await user.check('agnieszka@example.com', 'wrongpassword'));  
+    }, 100);
 
-user.check('agnieszka@example.com', 'wrongpassword').then(result => {
-    console.log(result); 
-});
+})();
