@@ -1,66 +1,54 @@
-abstract class PluginNew {
-    private static activePlugins: PluginNew[] = [];
-
+"use strict";
+class PluginNew {
     constructor() {
         this.install();
     }
-
-    install(): void {
+    install() {
         PluginNew.activePlugins.push(this);
     }
-
-    uninstall(): void {
+    uninstall() {
         PluginNew.activePlugins = PluginNew.activePlugins.filter(plugin => plugin !== this);
     }
-
-    static showActivePlugins(): void {
+    static showActivePlugins() {
         PluginNew.activePlugins.forEach((plugin) => {
-            if (isLogger(plugin)) { 
+            if (isLogger(plugin)) {
                 plugin.print();
             }
         });
     }
 }
-
-interface Logger extends PluginNew {
-    add(message: string): void;
-    print(): void;
-}
-
-function isLogger(plugin: PluginNew): plugin is Logger {
+PluginNew.activePlugins = [];
+function isLogger(plugin) {
     return "print" in plugin;
 }
-
-class Writter extends PluginNew implements Logger {
-    private messages: string[] = [];
-
-    add(message: string): void {
+class Writter extends PluginNew {
+    constructor() {
+        super(...arguments);
+        this.messages = [];
+    }
+    add(message) {
         this.messages.push(message);
     }
-
-    print(): void {
+    print() {
         console.log(this.messages.join('\n'));
         this.messages = [];
     }
 }
-
-class Messager extends PluginNew implements Logger {
-    private messages: string[] = [];
-
-    add(message: string): void {
+class Messager extends PluginNew {
+    constructor() {
+        super(...arguments);
+        this.messages = [];
+    }
+    add(message) {
         this.messages.push(message);
     }
-
-    print(): void {
+    print() {
         alert(this.messages.join('\n'));
         this.messages = [];
     }
 }
-
 const writter = new Writter();
 writter.add("Message from Writter");
-
 const messager = new Messager();
 messager.add("Message from Messager");
-
 PluginNew.showActivePlugins();
