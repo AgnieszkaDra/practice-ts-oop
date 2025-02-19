@@ -58,10 +58,10 @@ class MageClass extends Character {
     useSkill(actor: Character, target: Character): void {
         this.skillUsageCount++;
         console.log(`${actor.type} używa ${actor.skill} na ${target.type}`);
-        
+
         target.health -= 10;
         console.log(`${target.type} ma teraz ${target.health} HP`);
-        
+
         if (this.skillUsageCount >= 1) {
             actor.health -= actor.health * 0.1;
             console.log(`${actor.type} ma teraz ${actor.health} punktów zdrowia`);
@@ -76,7 +76,7 @@ class HealerClass extends Character {
 
     useSkill(actor: Character, target: Character): void {
         console.log(`${actor.type} używa ${this.skill} na ${target.type}`);
-        
+
         const healPercentage = Math.random() * (0.2 - 0.1) + 0.1;
         let healAmount = target.health * healPercentage;
 
@@ -87,10 +87,20 @@ class HealerClass extends Character {
     }
 }
 
+
 const warrior = new WarriorClass("Warrior");
 const mage = new MageClass("Mage");
 const healer = new HealerClass("Healer");
 
-Character.performAction(mage, warrior); 
-Character.performAction(mage, warrior); 
-Character.performAction(healer, mage); 
+while (warrior.health > 0 && mage.health > 0 && healer.health > 0) {
+    Character.performAction(mage, warrior);
+    if (warrior.health <= 0) break; 
+
+    Character.performAction(mage, warrior);
+    if (warrior.health <= 0) break; 
+
+    Character.performAction(healer, mage);
+    if (mage.health <= 0) break; 
+}
+
+console.log("Bitwa zakończona! Ktoś zginął.");

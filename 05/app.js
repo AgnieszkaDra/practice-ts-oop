@@ -64,6 +64,16 @@ class HealerClass extends Character {
 const warrior = new WarriorClass("Warrior");
 const mage = new MageClass("Mage");
 const healer = new HealerClass("Healer");
-Character.performAction(mage, warrior);
-Character.performAction(mage, warrior);
-Character.performAction(healer, mage);
+// ✅ Loop until one of them dies
+while (warrior.health > 0 && mage.health > 0 && healer.health > 0) {
+    Character.performAction(mage, warrior);
+    if (warrior.health <= 0)
+        break;
+    Character.performAction(mage, warrior);
+    if (warrior.health <= 0)
+        break;
+    Character.performAction(healer, mage);
+    if (mage.health <= 0)
+        break;
+}
+console.log("Bitwa zakończona! Ktoś zginął.");
