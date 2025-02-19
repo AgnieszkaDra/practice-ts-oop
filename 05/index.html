@@ -1,86 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Product Review</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-    }
-    .review {
-      border: 1px solid #ccc;
-      padding: 10px;
-      margin: 10px 0;
-      border-radius: 5px;
-    }
-    .review .rating {
-      font-weight: bold;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
 </head>
 <body>
-  <h1>Leave a Review for Product XYZ</h1>
-  <form id="review-form">
-    <div>
-      <label for="comment">Comment:</label><br>
-      <textarea id="comment" name="comment" rows="4" cols="50" required></textarea>
-    </div>
     
-    <div>
-        <label for="rating">Rating:</label><br>
-        <select id="rating" name="rating" required>
-          <option value="">Select a rating</option>
-          <option value="1">1 - Poor</option>
-          <option value="2">2 - Fair</option>
-          <option value="3">3 - Good</option>
-          <option value="4">4 - Very Good</option>
-          <option value="5">5 - Excellent</option>
-        </select>
-    </div>
-    
-
-    <button type="submit">Submit Review</button>
-  </form>
-
-  <h2>Reviews:</h2>
-  <div id="reviews"></div>
-
-  <script>
-    document.getElementById('review-form').addEventListener('submit', function(event) {
-      event.preventDefault(); // Zapobiega przeładowaniu strony
-
-      // Pobieranie danych z formularza
-      const comment = document.getElementById('comment').value;
-      const rating = document.getElementById('rating').value;
-
-      // Walidacja (opcjonalna)
-      if (!comment || !rating) {
-        alert('Please fill out both the comment and rating fields.');
-        return;
-      }
-
-      // Tworzenie nowego elementu recenzji
-      const reviewDiv = document.createElement('div');
-      reviewDiv.classList.add('review');
-
-      const ratingParagraph = document.createElement('p');
-      ratingParagraph.classList.add('rating');
-      ratingParagraph.textContent = `Rating: ${rating} / 5`;
-
-      const commentParagraph = document.createElement('p');
-      commentParagraph.textContent = comment;
-
-      reviewDiv.appendChild(ratingParagraph);
-      reviewDiv.appendChild(commentParagraph);
-
-      // Dodawanie recenzji na stronę
-      document.getElementById('reviews').appendChild(reviewDiv);
-
-      // Czyszczenie formularza
-      document.getElementById('review-form').reset();
-    });
-  </script>
+    <script src="app.js"></script>
 </body>
 </html>
