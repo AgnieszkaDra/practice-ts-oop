@@ -1,10 +1,9 @@
 "use strict";
 class Character {
-    constructor(name, type, action, skill, health = 100) {
+    constructor(name, type, skill, health = 100) {
         this.name = name;
         this.type = type;
         this._health = health;
-        this.action = action;
         this.skill = skill;
     }
     get health() {
@@ -25,7 +24,7 @@ class Character {
 }
 class WarriorClass extends Character {
     constructor(name) {
-        super(name, 'Warrior', 'attack', 'Slam');
+        super(name, 'Warrior', 'Slam');
     }
     useSkill(actor, target) {
         console.log(`${actor.type} używa ${actor.skill} na ${target.type}`);
@@ -35,23 +34,36 @@ class WarriorClass extends Character {
 }
 class MageClass extends Character {
     constructor(name) {
-        super(name, 'Mage', 'attack', 'Fireball');
+        super(name, 'Mage', 'Fireball');
         this.skillUsageCount = 0;
     }
     useSkill(actor, target) {
         this.skillUsageCount++;
-        console.log(`Mage skill used ${this.skillUsageCount} times`);
-        console.log(`${actor.type} używa ${this.skill} na ${target.type}`);
+        console.log(`${actor.type} używa ${actor.skill} na ${target.type}`);
         target.health -= 10;
         console.log(`${target.type} ma teraz ${target.health} HP`);
         if (this.skillUsageCount >= 1) {
-            target.health -= 10;
             actor.health -= actor.health * 0.1;
-            console.log(`Ola${actor.type} ma teraz ${actor.health} HP`);
+            console.log(`${actor.type} ma teraz ${actor.health} punktów zdrowia`);
         }
+    }
+}
+class HealerClass extends Character {
+    constructor(name) {
+        super(name, 'Healer', 'Heal');
+    }
+    useSkill(actor, target) {
+        console.log(`${actor.type} używa ${this.skill} na ${target.type}`);
+        const healPercentage = Math.random() * (0.2 - 0.1) + 0.1;
+        let healAmount = target.health * healPercentage;
+        healAmount = parseFloat(healAmount.toFixed(1));
+        target.health += healAmount;
+        console.log(`${target.type} ma teraz ${target.health} punktów zdrowia`);
     }
 }
 const warrior = new WarriorClass("Warrior");
 const mage = new MageClass("Mage");
+const healer = new HealerClass("Healer");
 Character.performAction(mage, warrior);
 Character.performAction(mage, warrior);
+Character.performAction(healer, mage);
