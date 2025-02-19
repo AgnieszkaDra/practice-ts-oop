@@ -1,5 +1,7 @@
 type SkillType = 'Slam' | 'Fireball' | 'Heal';
-type CharacterType = Warrior | Mage | Healer;
+type CharacterType = 'Warrior' | 'Mage' | 'Healer';
+type CharacterSkill = 'Slam' | 'Fireball' | 'Heal';
+type CharacterAction = 'attact' | 'heal' 
 
 interface Warrior {
     action: 'Slam';
@@ -23,11 +25,16 @@ abstract class Character {
     private name: string;
     private _health: number;
     protected type: CharacterType;
+    protected action : CharacterAction;
+    protected skill : CharacterSkill;
 
-    constructor(name: string, type: CharacterType, health: number = 100) {
+
+    constructor(name: string, type: CharacterType, health: number = 100, action: CharacterAction, skill: CharacterSkill) {
         this.name = name;
         this.type = type;
         this._health = health;
+        this.action = action;
+        this.skill = skill;
     }
 
     get health(): number {
@@ -45,60 +52,74 @@ abstract class Character {
         return this.name;
     }
 
-    abstract useSkill(target: Character, skill: SkillType): void;
+    abstract useSkill(actor: Character, target: Character): void;
+
+    static performAction(actor: Character, target: Character) {
+             actor.useSkill(actor, target); 
+            }
+    
 }
 
 class WarriorClass extends Character {
-    private skillUsageCount: number = 0; // Independent counter for WarriorClass
-
+    private skillUsageCount: number = 0; 
+ 
     constructor(name: string) {
-        super(name, { action: 'Slam', type: 'attack', health: 10 });
+        super(name, 'Warrior', 10, 'attact', 'Slam');
     }
 
-    useSkill(target: Character, skill: SkillType): void {
-        this.skillUsageCount++; // Increment only for this Warrior instance
+    useSkill(actor: Character, target: Character): void {
+        this.skillUsageCount++;
         console.log(`Warrior skill used ${this.skillUsageCount} times`);
 
-        if (skill === 'Slam') {
-            console.log(`${this.getName()} używa ${skill} na ${target.getName()}`);
+       
+            console.log(`${this.getName()} używa ${this.skill} na ${target.getName()}`);
             target.health -= 10;
             console.log(`${target.getName()} ma teraz ${target.health} HP`);
-        } else {
-            console.log(`${this.getName()} nie może użyć ${skill}`);
-        }
+     
+        
     }
+
+  
 }
 
 class MageClass extends Character {
-    private skillUsageCount: number = 0; // Independent counter for MageClass
+    private skillUsageCount: number = 0; 
 
     constructor(name: string) {
-        super(name, { action: 'Fireball', type: 'attack', health: 10 });
+        super(name, 'Mage', 15, 'attact', 'Fireball');
     }
 
-    useSkill(target: Character, skill: SkillType): void {
-        this.skillUsageCount++; // Increment only for this Mage instance
+
+    
+
+    useSkill(target: Character): void {
+        this.skillUsageCount++; 
         console.log(`Mage skill used ${this.skillUsageCount} times`);
 
-        if (skill === 'Fireball') {
-            console.log(`${this.getName()} używa ${skill} na ${target.getName()}`);
-            target.health -= 15;
-            console.log(`${target.getName()} ma teraz ${target.health} HP`);
-        } else {
-            console.log(`${this.getName()} nie może użyć ${skill}`);
-        }
+       
+            console.log(`${this.getName()} używa ${this.skill} na ${target.getName()}`);
+        
     }
+
+    
 }
 
-// Example Usage
+
 const warrior = new WarriorClass("Warrior");
 const mage = new MageClass("Mage");
 
-warrior.useSkill(warrior, 'Slam'); // Warrior skill used 1 time
-warrior.useSkill(warrior, 'Slam'); // Warrior skill used 2 times
 
-mage.useSkill(warrior, 'Fireball'); // Mage skill used 1 time
-mage.useSkill(warrior, 'Fireball'); // Mage skill used 2 times
+
+mage.useSkill(mage); 
+mage.useSkill(mage); 
+
+Character.performAction(warrior, mage); 
+
+
+//Character.performAction(warrior, mage, 'Slam'); 
+
+//mage.useSkill(warrior);
+//mage.useSkill(warrior); 
 
 // abstract class Character {
 //     private name: string;
