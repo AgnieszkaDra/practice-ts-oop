@@ -1,4 +1,4 @@
-type CharacterType = 'Warrior' | 'Mage' | 'Healer';
+//type CharacterType = 'Warrior' | 'Mage' | 'Healer';
 type Skill = 'Slam' | 'Fireball' | 'Heal';
 
 abstract class Character {
@@ -9,6 +9,8 @@ abstract class Character {
         this.name = name;
         this._health = health;
     }
+
+    abstract getSkill(): Skill
 
     get health(): number {
         return this._health;
@@ -33,50 +35,58 @@ abstract class Character {
 }
 
 class WarriorCharacter extends Character {
-    skill: Skill;
     constructor(name: string) {
         super(name);
-        this.skill = 'Slam';
+    }
+
+    getSkill(): Skill{
+        return 'Slam'
     }
 
     useSkill(actor: Character, target: Character): void {
-        console.log(`${actor.name} używa ${this.skill} na ${target.name}`);
+        console.log(`${actor.getName()} używa ${this.getSkill()} na ${target.getName()}`);
         target.health -= 15;
-        console.log(`${target.type} ma teraz ${target.health} HP`);
+        console.log(`${target.getName()} ma teraz ${target.health} HP`);
     }
 }
 
 class MageCharacter extends Character {
     private skillUsageCount: number = 0;
-    skill: Skill;
+    
     constructor(name: string) {
         super(name);
-        this.skill = 'Fireball';
+    }
+
+    getSkill(): Skill{
+        return 'Fireball'
     }
 
     useSkill(actor: Character, target: Character): void {
         this.skillUsageCount++;
-        console.log(`${actor.type} używa ${actor.skill} na ${target.type}`);
+        console.log(`${actor.getName()} używa ${actor.getSkill()} na ${target.getName()}`);
 
         target.health -= 10;
-        console.log(`${target.type} ma teraz ${target.health} HP`);
+        console.log(`${target.getName()} ma teraz ${target.health} HP`);
 
         if (this.skillUsageCount >= 1) {
             actor.health -= actor.health * 0.1;
-            console.log(`${actor.type} ma teraz ${actor.health} punktów zdrowia`);
+            console.log(`${actor.getName()} ma teraz ${actor.health} punktów zdrowia`);
         }
     }
 }
 
 class HealerCharacter extends Character {
-    skill: Skill;
+    
     constructor(name: string) {
         super(name);
-        this.skill = 'Heal';
+    }
+
+    getSkill(): Skill{
+        return 'Fireball'
     }
 
     useSkill(actor: Character, target: Character): void {
-        console.log(`${actor.type} używa ${this.skill} na ${target.type}`);
+        console.log(`${actor.getName()} używa ${this.getSkill()} na ${target.getName()}`);
 
         const healPercentage = Math.random() * (0.2 - 0.1) + 0.1;
         let healAmount = target.health * healPercentage;
@@ -84,7 +94,7 @@ class HealerCharacter extends Character {
         healAmount = parseFloat(healAmount.toFixed(1));
 
         target.health += healAmount;
-        console.log(`${target.type} ma teraz ${target.health} punktów zdrowia`);
+        console.log(`${target.getName()} ma teraz ${target.health} punktów zdrowia`);
     }
 }
 
