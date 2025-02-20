@@ -1,34 +1,23 @@
 class UUID {
     static count: number = 0;
-    static uuidMap: Map<string, string> = new Map(); 
+    static uuid: string | null = null; // Store the last generated UUID for verification
 
- 
-    static generate(title: string, author: string): string {
-        const key = `${title}-${author}`; 
-        
-        if (UUID.uuidMap.has(key)) {
-            return UUID.uuidMap.get(key) as string;  
+    private static generateSegment(): string {
+        const characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
+        let segment = '';
+
+        for (let i = 0; i < 4; i++) {
+            const randomIndex = Math.floor(Math.random() * characters.length);
+            segment += characters[randomIndex];
         }
 
-        const generateSegment = () => {
-            const characters = 'abcdefghijklmnopqrstuvwxyz0123456789';  
-            let segment = '';
-            
-          
-            for (let i = 0; i < 4; i++) {
-                const randomIndex = Math.floor(Math.random() * characters.length);  
-                segment += characters[randomIndex];  
-            }
-            
-            return segment;
-        };
+        return segment;
+    }
 
-      
-        const uuid = `${generateSegment()}-${generateSegment()}-${generateSegment()}-${generateSegment()}`;
-        
-        UUID.uuidMap.set(key, uuid);
-        UUID.count++; 
-
+    static generate(): string {
+        const uuid = `${this.generateSegment()}-${this.generateSegment()}-${this.generateSegment()}-${this.generateSegment()}`;
+        this.uuid = uuid; // Store the generated UUID
+        this.count++;
         return uuid;
     }
 
@@ -36,32 +25,34 @@ class UUID {
         const regex = /^[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}$/;
         return regex.test(uuid);
     }
+
+    static wasGenerated(uuid: string): boolean {
+        return this.uuid === uuid;
+    }
 }
 
 abstract class Product {
     uuid: string;
 
-    constructor(title: string, author: string) {
-        this.uuid = UUID.generate(title, author);
+    constructor(public title: string, public author: string) {
+        this.uuid = UUID.generate();
     }
 }
 
 class Book extends Product {
-    author: string;
-    title: string;
-
     constructor(title: string, author: string) {
-        super(title, author);  
-        this.title = title;
-        this.author = author;
+        super(title, author);
     }
 }
 
-const book1 = new Book('title2', 'author2');
+const book1 = new Book('title1', 'author1');
 const book2 = new Book('title2', 'author2');
-const book3 = new Book('title2', 'author3');
-console.log(book1.uuid);  
-console.log(book2.uuid);  
-console.log(book3.uuid);  
+const book3 = new Book('title3', 'author3');
 
-console.log(UUID.count);  
+console.log(book1.uuid);
+console.log(book2.uuid);
+console.log(book3.uuid);
+
+console.log(UUID.count);
+console.log(UUID.wasGenerated(book1.uuid)); 
+
