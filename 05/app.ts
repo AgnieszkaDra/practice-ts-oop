@@ -1,17 +1,13 @@
 type CharacterType = 'Warrior' | 'Mage' | 'Healer';
-type CharacterSkill = 'Slam' | 'Fireball' | 'Heal';
+type Skill = 'Slam' | 'Fireball' | 'Heal';
 
 abstract class Character {
     private name: string;
     private _health: number;
-    public type: CharacterType;
-    public skill: CharacterSkill;
-
-    constructor(name: string, type: CharacterType, skill: CharacterSkill, health: number = 100) {
+   
+    constructor(name: string, health: number = 100) {
         this.name = name;
-        this.type = type;
         this._health = health;
-        this.skill = skill;
     }
 
     get health(): number {
@@ -36,23 +32,26 @@ abstract class Character {
     }
 }
 
-class WarriorClass extends Character {
+class WarriorCharacter extends Character {
+    skill: Skill;
     constructor(name: string) {
-        super(name, 'Warrior', 'Slam');
+        super(name);
+        this.skill = 'Slam';
     }
 
     useSkill(actor: Character, target: Character): void {
-        console.log(`${actor.type} używa ${actor.skill} na ${target.type}`);
+        console.log(`${actor.name} używa ${this.skill} na ${target.name}`);
         target.health -= 15;
         console.log(`${target.type} ma teraz ${target.health} HP`);
     }
 }
 
-class MageClass extends Character {
+class MageCharacter extends Character {
     private skillUsageCount: number = 0;
-
+    skill: Skill;
     constructor(name: string) {
-        super(name, 'Mage', 'Fireball');
+        super(name);
+        this.skill = 'Fireball';
     }
 
     useSkill(actor: Character, target: Character): void {
@@ -69,9 +68,11 @@ class MageClass extends Character {
     }
 }
 
-class HealerClass extends Character {
+class HealerCharacter extends Character {
+    skill: Skill;
     constructor(name: string) {
-        super(name, 'Healer', 'Heal');
+        super(name);
+        this.skill = 'Heal';
     }
 
     useSkill(actor: Character, target: Character): void {
@@ -88,9 +89,9 @@ class HealerClass extends Character {
 }
 
 
-const warrior = new WarriorClass("Warrior");
-const mage = new MageClass("Mage");
-const healer = new HealerClass("Healer");
+const warrior = new WarriorCharacter("Warrior");
+const mage = new MageCharacter("Mage");
+const healer = new HealerCharacter("Healer");
 
 while (warrior.health > 0 && mage.health > 0 && healer.health > 0) {
     Character.performAction(mage, warrior);
