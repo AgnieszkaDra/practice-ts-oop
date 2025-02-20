@@ -15,23 +15,19 @@ abstract class PluginNew {
 
     static showActivePlugins(): void {
         PluginNew.activePlugins.forEach((plugin) => {
-            if (isLogger(plugin)) { 
+            if (plugin instanceof Logger) {
                 plugin.print();
             }
         });
     }
 }
 
-interface Logger extends PluginNew {
-    add(message: string): void;
-    print(): void;
+abstract class Logger extends PluginNew {
+    abstract add(message: string): void;
+    abstract print(): void;
 }
 
-function isLogger(plugin: PluginNew): plugin is Logger {
-    return "print" in plugin;
-}
-
-class Writter extends PluginNew implements Logger {
+class Writter extends Logger {
     private messages: string[] = [];
 
     add(message: string): void {
@@ -44,7 +40,7 @@ class Writter extends PluginNew implements Logger {
     }
 }
 
-class Messager extends PluginNew implements Logger {
+class Messager extends Logger {
     private messages: string[] = [];
 
     add(message: string): void {

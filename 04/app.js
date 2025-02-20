@@ -11,17 +11,16 @@ class PluginNew {
     }
     static showActivePlugins() {
         PluginNew.activePlugins.forEach((plugin) => {
-            if (isLogger(plugin)) {
+            if (plugin instanceof Logger) {
                 plugin.print();
             }
         });
     }
 }
 PluginNew.activePlugins = [];
-function isLogger(plugin) {
-    return "print" in plugin;
+class Logger extends PluginNew {
 }
-class Writter extends PluginNew {
+class Writter extends Logger {
     constructor() {
         super(...arguments);
         this.messages = [];
@@ -34,7 +33,7 @@ class Writter extends PluginNew {
         this.messages = [];
     }
 }
-class Messager extends PluginNew {
+class Messager extends Logger {
     constructor() {
         super(...arguments);
         this.messages = [];
